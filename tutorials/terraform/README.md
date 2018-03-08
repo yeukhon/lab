@@ -249,7 +249,7 @@ Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 
 Money matter, so time to save some pennies and destroy our EC2 instance! One
 method is to simply remove the relevant code from ``aws.tf``, and
-re-run our ``review-then-change`` commands. Go ahead, and remove the this
+re-run our ``plan-and-apply`` commands. Go ahead, and remove the this
 whole block from ``aws.tf``:
 
 ```
@@ -378,7 +378,6 @@ above and apply again to incrementally change your infrastructure.
 ```
 
 As we expected, VPC security group name must be unique. How do we fix this?
-The best way to handle this is to
 There are a number of ways to fix the problem.
 
 1. Delete the orphan security group manually, then repeat ``plan-and-apply``.
