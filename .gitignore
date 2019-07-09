@@ -110,3 +110,5 @@ ENV/
 # .tfvars files
 *.tfvars
 
+# ansible files
+*.retry

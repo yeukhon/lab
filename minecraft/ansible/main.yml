@@ -1,0 +1,47 @@
+---
+
+- hosts: all
+  gather_facts: false
+  vars:
+    download_url: "https://papermc.io/ci/job/Paper-1.13/lastSuccessfulBuild/artifact/paperclip.jar"
+    minecraft_dir: "/opt/minecraft"
+
+  tasks:
+    - name: create minecraft user
+      user:
+        name: minecraft
+        shell: /bin/bash
+
+    - name: create /opt/minecraft directory
+      file:
+        path: "{{ minecraft_dir }}"
+        state: directory
+        owner: minecraft
+        group: minecraft
+
+    - name: download paperclip
+      get_url:
+        url: "{{ download_url }}"
+        dest: "{{ minecraft_dir }}/paperclip.jar"
+
+    - name: copy systemd job
+      copy:
+        src: paperclip.service
+        dest: /etc/systemd/system/paperclip.service
+      notify:
+        - systemctl daemon-reload
+
+    - name: ensure paperclip service is running
+      systemd:
+        name: paperclip.service
+        state: started
+
+    - name: allow minecraft port 25565
+      ufw:
+        rule: allow
+        port: 25565
+        proto: tcp
+
+  handlers:
+    - name: systemctl daemon-reload
+      shell: systemctl daemon-reload
