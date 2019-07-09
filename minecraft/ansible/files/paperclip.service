@@ -4,10 +4,18 @@ After=network.target
 
 [Service]
 Type=oneshot
+
+ProtectHome=true
+ProtectSystem=full
+PrivateDevices=true
+NoNewPrivileges=true
+PrivateTmp=true
+InaccessibleDirectories=/root /sys /srv /media -/lost+found
+ReadWriteDirectories=/opt/minecraft
 WorkingDirectory=/opt/minecraft
 User=minecraft
 Group=minecraft
-ExecStart=/usr/bin/java -jar -Xmx1G /opt/minecraft/paperclip.jar
+ExecStart=/usr/bin/java -jar -Xmx1G /opt/minecraft/paperclip.jar &
 
 [Install]
 WantedBy=multi-user.target
