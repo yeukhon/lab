@@ -3,11 +3,17 @@
 - hosts: all
   gather_facts: false
   vars:
-    download_url: "https://papermc.io/ci/job/Paper-1.13/lastSuccessfulBuild/artifact/paperclip.jar"
     download_url: "https://papermc.io/ci/job/Paper-1.14/lastSuccessfulBuild/artifact/paperclip.jar"
     minecraft_dir: "/opt/minecraft"
 
   tasks:
+    - name: install software
+      apt:
+        name: "{{ item }}"
+      with_items:
+        - openjdk-8-jre-headless
+        - screen
+
     - name: create minecraft user
       user:
         name: minecraft
@@ -24,6 +30,8 @@
       get_url:
         url: "{{ download_url }}"
         dest: "{{ minecraft_dir }}/paperclip.jar"
+        owner: minecraft
+        group: minecraft
 
     - name: copy systemd job
       copy:
