@@ -1,21 +1,27 @@
-[Unit]
+Unit]
 Description=Run Paperclip server
 After=network.target
 
 [Service]
-Type=oneshot
+Type=simple
+RemainAfterExit=yes
 
 ProtectHome=true
 ProtectSystem=full
 PrivateDevices=true
-NoNewPrivileges=true
 PrivateTmp=true
+NoNewPrivileges=true
+
 InaccessibleDirectories=/root /sys /srv /media -/lost+found
 ReadWriteDirectories=/opt/minecraft
 WorkingDirectory=/opt/minecraft
 User=minecraft
 Group=minecraft
-ExecStart=/usr/bin/java -jar -Xmx1G /opt/minecraft/paperclip.jar &
+
+ExecStart=/usr/bin/screen -DmS minecraft /usr/bin/java -Xmx1536M -jar paperclip.jar
+ExecStop=/usr/bin/screen -p 0 -S minecraft -X 'save-all'
+ExecStop=/usr/bin/screen -p 0 -S minecraft -X 'stop'
+ExecStop=/bin/sleep 5
 
 [Install]
 WantedBy=multi-user.target
